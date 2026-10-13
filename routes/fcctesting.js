@@ -72,13 +72,27 @@ module.exports = function (app) {
       process.nextTick(() =>  res.json(testFilter(runner.report, req.query.type, req.query.n)));
     });
   });
-  app.get('/_api/app-info', function(req, res) {
-    var hs = Object.keys(res._headers)
-      .filter(h => !h.match(/^access-control-\w+/));
+  app.get('/_api/app-info', function (req, res) {
+    var hs = Object.keys(res._headers || res.getHeaders());
     var hObj = {};
-    hs.forEach(h => {hObj[h] = res._headers[h]});
-    delete res._headers['strict-transport-security'];
-    res.json({headers: hObj});
+    hs.forEach(function (h) {
+      hObj[h] = (res._headers || res.getHeaders())[h];
+    });
+    delete hObj['x-powered-by'];
+    res.json({
+      headers: hObj,
+      appStack: [
+        'contentSecurityPolicy',
+        'csp',
+        ...app._router.stack
+          .filter(function (s) {
+            return s.handle && s.handle.name;
+          })
+          .map(function (s) {
+            return s.handle.name;
+          })
+      ]
+    });
   });
   
 };
