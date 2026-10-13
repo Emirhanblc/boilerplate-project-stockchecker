@@ -17,7 +17,6 @@ const app = express();
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'"]
     }
