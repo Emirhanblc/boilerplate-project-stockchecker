@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Environment variables & secrets — NEVER commit these
+.env
+.env.*
+*.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor / IDE directories
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Build output
+dist/
+build/
