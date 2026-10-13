@@ -12,26 +12,17 @@ const runner            = require('./test-runner');
 
 const app = express();
 
-// FCC CSP Testi İçin Kesin Uyumlu Middleware
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; script-src 'self'; style-src 'self'"
-  );
-  next();
-});
-
-// --- 1. GÜVENLİK BAŞLIĞI (fCC Zorunlu Kuralı) ---
-// Yalnızca kendi kaynağından script ve css yüklenmesine izin ver 
-
-/* app.use(
+// --- GÜVENLİK BAŞLIĞI (fCC Zorunlu Kuralı) ---
+// freeCodeCamp test koşucusu helmet.contentSecurityPolicy arar
+app.use(
   helmet.contentSecurityPolicy({
     directives: {
+      defaultSrc: ["'self'"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'"]
     }
   })
-);   */
+);
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -40,7 +31,7 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// --- 2. MONGODB BAĞLANTISI ---
+// --- MONGODB BAĞLANTISI ---
 if (process.env.DB) {
   mongoose.connect(process.env.DB)
     .then(() => console.log('✅ MongoDB veritabanına başarıyla bağlanıldı!'))
